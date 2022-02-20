@@ -1,0 +1,10 @@
+[submodule "subprojects/appframework"]
+	path = subprojects/appframework
+	url = https://github.com/kapigames/appframework
+[submodule "subprojects/json"]
+	path = subprojects/json
+	url = https://github.com/nlohmann/json
+	branch = release/3.10.5
+[submodule "subprojects/maddy"]
+	path = subprojects/maddy
+	url = https://github.com/kapigames/maddy
