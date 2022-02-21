@@ -104,7 +104,7 @@ void project::_load_project_json_menu(nlohmann::json* json, menu_item* item) {
 
 
 
-void project::_debug_print_menu(menu_item* item, size_t level) {
+void project::debug_print_menu(menu_item* item, size_t level) {
     for (size_t i = 0; i < level; i++) {
         std::cout << "  ";
     }
@@ -112,7 +112,7 @@ void project::_debug_print_menu(menu_item* item, size_t level) {
     if(item == nullptr) {
         std::cout << "\nMenu:\n";
         for (size_t i = 0; i < menu.size(); i++) {
-            _debug_print_menu(&menu[i], level+1);
+            debug_print_menu(&menu[i], level+1);
         }
         std::cout << "\n";
     }
@@ -124,7 +124,7 @@ void project::_debug_print_menu(menu_item* item, size_t level) {
         }
         std::cout << "\n";
         for (size_t i = 0; i < item->contents->size(); i++) {
-            _debug_print_menu(&item->contents->at(i), level+1);
+            debug_print_menu(&item->contents->at(i), level+1);
         }
     }
 }
