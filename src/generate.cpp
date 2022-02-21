@@ -20,15 +20,31 @@ void project::_convert_to_html(std::filesystem::path file_path, std::filesystem:
     std::filesystem::create_directories(out_file_path.parent_path());
     std::shared_ptr<maddy::Parser> parser = std::make_shared<maddy::Parser>();
 
+    std::stringstream ss;
+    ss << read(file_path);
+    write(out_file_path, parser->Parse(ss));
+}
+
+
+
+std::string project::read(std::filesystem::path file_path) {
     std::ifstream file(file_path);
-    std::ofstream out(out_file_path);
-    if(file.is_open() && out.is_open()) {
+    if(file.is_open()) {
         std::stringstream ss;
         ss << file.rdbuf();
-        out << parser->Parse(ss);
+        return ss.str();
     } else {
-        std::cerr << "Failed to open file!\n";
-        std::cerr << "Since i programed this in this way you have no idea opening what file failed, yay!\n";
+        std::cerr << "Failed to read file: " << file_path << ", make sure that file exists!";
+        exit(-1);
+    }
+}
+
+void project::write(std::filesystem::path file_path, std::string_view text) {
+    std::ofstream file(file_path);
+    if(file.is_open()) {
+        file << text;
+    } else {
+        std::cerr << "Failed to write/create file: " << file_path << "!";
         exit(-1);
     }
 }

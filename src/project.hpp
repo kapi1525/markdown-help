@@ -2,6 +2,8 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <string_view>
 #include "nlohmann/json.hpp"
 #include "maddy/parser.h"
 
@@ -39,4 +41,8 @@ private:
     void _load_project_json_menu(nlohmann::json* json, menu_item* item = nullptr);
 
     void _convert_to_html(std::filesystem::path file_path, std::filesystem::path out_file_path);
+
+    // I made those only cause i hate std::istream and ofstream
+    std::string read(std::filesystem::path file_path);
+    void write(std::filesystem::path file_path, std::string_view text);
 };
