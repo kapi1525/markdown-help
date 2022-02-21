@@ -3,6 +3,8 @@
 
 
 void project::generate_chm() {
+    _prepare_dirs();
+
     for (size_t i = 0; i < files.size(); i++) {
         if(files[i].extension().compare(".md") == 0) {
             _convert_to_html(files[i], std::filesystem::current_path() / temp_path / std::filesystem::relative(files[i]).replace_extension("html"));
@@ -23,6 +25,20 @@ void project::_convert_to_html(std::filesystem::path file_path, std::filesystem:
     std::stringstream ss;
     ss << read(file_path);
     write(out_file_path, parser->Parse(ss));
+}
+
+
+
+void project::_prepare_dirs() {
+    std::filesystem::create_directories(output_path);
+    std::filesystem::create_directories(temp_path);
+    write(output_path / ".gitignore", "*");
+    write(temp_path / ".gitignore", "*");
+}
+
+void project::_cleanup_dirs() {
+    std::cout << "Cleaning up...";
+    std::cout << "Removed " << std::filesystem::remove_all(temp_path) << " files.";
 }
 
 

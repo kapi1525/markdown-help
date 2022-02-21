@@ -42,7 +42,10 @@ private:
 
     void _convert_to_html(std::filesystem::path file_path, std::filesystem::path out_file_path);
 
-    // I made those only cause i hate std::istream and ofstream
+    void _prepare_dirs();
+    void _cleanup_dirs();
+
+    // I made those only cause i hate std::ifstream and ofstream
     std::string read(std::filesystem::path file_path);
     void write(std::filesystem::path file_path, std::string_view text);
 };
