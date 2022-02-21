@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "includePath": [
+                "src/**",
+                "subprojects/appframework/**",
+                "subprojects/json/**",
+                "subprojects/maddy/**"
+            ],
+            "compileCommands": "./${config:mesonbuild.buildFolder}/compile_commands.json"
+        },
+        {
+            "name": "Linux",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "includePath": [
+                "src/**",
+                "subprojects/appframework/**",
+                "subprojects/json/**",
+                "subprojects/maddy/**"
+            ],
+            "compileCommands": "./${config:mesonbuild.buildFolder}/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

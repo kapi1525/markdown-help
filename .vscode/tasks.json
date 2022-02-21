@@ -1,0 +1,46 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "ninja -C ${config:mesonbuild.buildFolder} -j 4",
+            "group": "build"
+        },
+        {
+            "label": "run tests",
+            "type": "shell",
+            "command": "meson test -C ${config:mesonbuild.buildFolder} --repeat 10000 --num-processes 25 --print-errorlogs -t 0.2",
+            "group": "build"
+        },
+        {
+            "label": "configure debug",
+            "type": "shell",
+            "command": "clear && rm ${config:mesonbuild.buildFolder} -r -f && meson ${config:mesonbuild.buildFolder}",
+            "windows": {
+                "command": "cls && meson ${config:mesonbuild.buildFolder}"
+            },
+            "group": "build"
+        },
+        {
+            "label": "configure release",
+            "type": "shell",
+            "command": "clear && rm ${config:mesonbuild.buildFolder} -r -f && meson --buildtype release ${config:mesonbuild.buildFolder}",
+            "windows": {
+                "command": "cls && meson --buildtype release ${config:mesonbuild.buildFolder}"
+            },
+            "group": "build"
+        },
+        {
+            "label": "configure cross to windows",
+            "type": "shell",
+            "command": "clear && rm ${config:mesonbuild.buildFolder} -r -f && /home/kacper/msvc-wine/vs/bin/x86/msvcenv.sh && WINEDEBUG=-all meson --cross-file ./cross_linux_to_windows.ini --buildtype release bin",
+            "windows": {
+                "command": "echo nope"
+            },
+            "group": "build"
+        }
+    ]
+}
