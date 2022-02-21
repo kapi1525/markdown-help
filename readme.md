@@ -1,2 +1,1 @@
-
-## markdown-help is a nice tool that converts markdown files to .chm (Microsoft compiled help)
+markdown-help is a small tool that converts markdown files to .chm (Microsoft compiled help)
