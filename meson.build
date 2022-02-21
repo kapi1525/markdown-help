@@ -12,6 +12,6 @@ json_dep = json_proj.get_variable('nlohmann_json_dep')
 maddy_dep = maddy_proj.get_variable('maddy_dep')
 
 
-files = files('src/main.cpp', 'src/project.cpp', 'src/generate.cpp')
+files = files('src/main.cpp', 'src/project.cpp', 'src/prepare.cpp')
 
 markdown_help = executable('markdown-help', files, dependencies: [dependency('threads'), appframework_dep, json_dep, maddy_dep])

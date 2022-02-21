@@ -3,7 +3,15 @@
 
 
 void markdown_help::start() {
-    std::cin.get();
+    if(arguments.has("v") || arguments.has("h")) {
+        std::cout << "markdown-help " << markdown_help_version << "\nCopyright (C) Kacper Bugla 'Kapi' 2022\n\n";
+        exit(0);
+    }
+
+    if(arguments.has("d")) {
+        std::cin.get();
+    }
+
     proj.load_project("mdhelp.json");
 
     if(arguments.has("o")) {
@@ -14,7 +22,7 @@ void markdown_help::start() {
         proj.temp_path = std::filesystem::absolute(arguments.get("t"));
     }
 
-    proj.generate_chm();
+    proj.prepare_build();
 }
 
 

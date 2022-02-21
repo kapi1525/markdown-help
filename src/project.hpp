@@ -16,21 +16,31 @@ struct menu_item {
 };
 
 
+enum compiler {
+    hhc,        // Microsoft html help workshop compiler (windows only)
+    chmcmd      // Free pascal html help compiler        (multiplatform)
+};
+
+
 class project {
 public:
     project();
     ~project();
 
     void load_project(std::filesystem::path path);
-    void generate_chm();
+    void prepare_build();
+    void compile();
 
     void debug_print_menu(menu_item* item = nullptr, size_t level = 0);
+
+    compiler c = chmcmd;
 
     std::string name;
 
     std::filesystem::path output_path = "out";
     std::filesystem::path temp_path   = "temp";
 
+    // deques everywhere!
     std::deque<menu_item> menu;
 
     std::deque<std::filesystem::path> files;
@@ -40,7 +50,9 @@ private:
     void _load_project_json_files(nlohmann::json* json);
     void _load_project_json_menu(nlohmann::json* json, menu_item* item = nullptr);
 
-    void _convert_to_html(std::filesystem::path file_path, std::filesystem::path out_file_path);
+    void _convert_files_to_html();
+    std::string _markdown_to_html(std::string_view input);
+    void _create_htmlhelp_workshop_project();
 
     void _prepare_dirs();
     void _cleanup_dirs();

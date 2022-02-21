@@ -2,29 +2,31 @@
 
 
 
-void project::generate_chm() {
+void project::prepare_build() {
     _prepare_dirs();
+    _convert_files_to_html();
+    debug_print_menu();
+}
 
+
+void project::_convert_files_to_html() {
+    std::cout << "Converting files to html format...\n";
     for (size_t i = 0; i < files.size(); i++) {
         if(files[i].extension().compare(".md") == 0) {
-            _convert_to_html(files[i], std::filesystem::current_path() / temp_path / std::filesystem::relative(files[i]).replace_extension("html"));
-        } else {
-            std::cout << (std::filesystem::current_path() / temp_path / std::filesystem::relative(files[i])).string() << "\n";
-            std::filesystem::copy_file(files[i], std::filesystem::current_path() / temp_path / std::filesystem::relative(files[i]), std::filesystem::copy_options::overwrite_existing);
+            std::cout << files[i] << "\n";
+            std::filesystem::path newpath = std::filesystem::absolute(temp_path / std::filesystem::relative(files[i]).replace_extension("html"));
+            write(newpath, _markdown_to_html(read(files[i])));
+            files[i] = newpath;
         }
     }
 }
 
 
-void project::_convert_to_html(std::filesystem::path file_path, std::filesystem::path out_file_path) {
-    std::cout << out_file_path.string() << "\n";
-
-    std::filesystem::create_directories(out_file_path.parent_path());
+std::string project::_markdown_to_html(std::string_view input) {
     std::shared_ptr<maddy::Parser> parser = std::make_shared<maddy::Parser>();
-
     std::stringstream ss;
-    ss << read(file_path);
-    write(out_file_path, parser->Parse(ss));
+    ss << input;
+    return parser->Parse(ss);
 }
 
 
@@ -44,6 +46,7 @@ void project::_cleanup_dirs() {
     std::cout << "Cleaning up...";
     std::cout << "Removed " << std::filesystem::remove_all(temp_path) << " files.";
 }
+
 
 
 
