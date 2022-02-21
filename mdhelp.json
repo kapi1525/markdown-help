@@ -1,0 +1,26 @@
+{
+    "project": {
+        "name": "test help file",
+        "output-path": "out",
+        "temp-path": "temp"
+    },
+
+    "menu": [
+        ["item name", "file.md"],
+        ["item name", "file.md"],
+        ["item name", "file.md", [
+            ["item name", "file.md"],
+            ["item name", "file.md"],
+            ["item name", "file.md"]
+        ]],
+        ["item name", [
+            ["item name", "file.md"],
+            ["item name", "file.md"],
+            ["item name", "file.md"]
+        ]]
+    ],
+
+    "files": [
+        "file.md"
+    ]
+}
