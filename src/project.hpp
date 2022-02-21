@@ -20,6 +20,7 @@ public:
     ~project();
 
     void load_project(std::filesystem::path path);
+    void generate_chm();
 
     void debug_print_menu(menu_item* item = nullptr, size_t level = 0);
 
@@ -36,4 +37,6 @@ private:
     void _load_project_json_project(nlohmann::json* json);
     void _load_project_json_files(nlohmann::json* json);
     void _load_project_json_menu(nlohmann::json* json, menu_item* item = nullptr);
+
+    void _convert_to_html(std::filesystem::path file_path, std::filesystem::path out_file_path);
 };

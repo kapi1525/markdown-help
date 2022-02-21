@@ -1,6 +1,7 @@
 #include "project.hpp"
 
 
+
 project::project() {}
 project::~project() {}
 
@@ -73,7 +74,6 @@ void project::_load_project_json_menu(nlohmann::json* json, menu_item* item) {
             for (size_t i = 0; i < files.size(); i++) {
                 if(files[i] == std::filesystem::absolute(json->at(1))) {
                     item->file = &files[i];
-                    std::cout << "Found file match!\n";
                 }
             }
         }
@@ -91,7 +91,6 @@ void project::_load_project_json_menu(nlohmann::json* json, menu_item* item) {
             for (size_t i = 0; i < files.size(); i++) {
                 if(files[i] == std::filesystem::absolute(json->at(1))) {
                     item->file = &files[i];
-                    std::cout << "Found file match!\n";
                 }
             }
             for (size_t i = 0; i < json->at(2).size(); i++) {

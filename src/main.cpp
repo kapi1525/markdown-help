@@ -5,6 +5,7 @@
 void markdown_help::start() {
     std::cin.get();
     proj.load_project("mdhelp.json");
+    proj.generate_chm();
 }
 
 
