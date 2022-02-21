@@ -7,17 +7,9 @@ project::~project() {}
 
 void project::load_project(std::filesystem::path path) {
     path = std::filesystem::absolute(path);
+    std::stringstream ss(read(path));
     nlohmann::json json;
-
-    {
-        std::ifstream json_file(path);
-        if(json_file.is_open()) {
-            json_file >> json;
-        } else {
-            std::cerr << "Failed to open file " << path << " , make sure this file exists.";
-            exit(-1);
-        }
-    }
+    ss >> json;
 
     _load_project_json_project(&json);
     _load_project_json_files(&json);
