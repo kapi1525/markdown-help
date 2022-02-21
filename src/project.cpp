@@ -64,7 +64,7 @@ void project::_load_project_json_menu(nlohmann::json* json, menu_item* item) {
             _load_project_json_menu(&json->at("menu")[i], &menu[i]);
         }
 
-        _debug_print_menu();
+        debug_print_menu();
     } 
 
     else {
