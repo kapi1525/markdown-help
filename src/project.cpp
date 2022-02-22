@@ -25,6 +25,13 @@ void project::_load_project_json_project(nlohmann::json* json) {
             std::cerr << "Project has no name!\n";
             exit(-1);
         }
+
+        if(json->at("project").contains("default-file") && json->at("project")["default-file"].is_string()) {
+            default_file = json->at("project")["default-file"];
+        } else {
+            std::cerr << "Project has to have default-file!\n";
+            exit(-1);
+        }
     } else {
         std::cerr << "json file must contain project object!\n";
         exit(-1);
