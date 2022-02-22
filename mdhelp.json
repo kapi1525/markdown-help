@@ -1,8 +1,7 @@
 {
     "project": {
         "name": "test help file",
-        "output-path": "out",
-        "temp-path": "temp"
+        "default-file": "file.html"
     },
 
     "menu": [
