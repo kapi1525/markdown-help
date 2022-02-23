@@ -12,7 +12,7 @@ void markdown_help::start() {
         std::cin.get();
     }
 
-    proj.load_project("mdhelp.json");
+    proj.load_project("mh.config.json");
 
     if(arguments.has("o")) {
         proj.output_path = std::filesystem::absolute(arguments.get("o"));

@@ -27,7 +27,7 @@ public:
     project();
     ~project();
 
-    void load_project(std::filesystem::path path);
+    void load_project(std::filesystem::path file);
     void prepare_build();
     void compile();
 
@@ -44,12 +44,15 @@ public:
     // deques everywhere!
     std::deque<menu_item> menu;
 
+    // List of all files used in this project, other parts of projects point to thiese so if file path changes here it changes in entire project.
     std::deque<std::filesystem::path> files;
 
+
 private:
-    void _load_project_json_project(nlohmann::json* json);
-    void _load_project_json_files(nlohmann::json* json);
-    void _load_project_json_menu(nlohmann::json* json, menu_item* item = nullptr);
+    // Find pointer to specified file in files array.
+    std::filesystem::path* get_file_pointer(std::filesystem::path file);
+
+    void load_toc(nlohmann::json* json, menu_item* item);
 
     void _convert_files_to_html();
     std::string _markdown_to_html(std::string_view input);

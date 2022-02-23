@@ -5,99 +5,90 @@
 project::project() {}
 project::~project() {}
 
-void project::load_project(std::filesystem::path path) {
-    path = std::filesystem::absolute(path);
-    std::stringstream ss(read(path));
+
+void project::load_project(std::filesystem::path file) {
+    std::cout << "Loading project...\n";
+
+    std::stringstream ss(read(std::filesystem::absolute(file)));
     nlohmann::json json;
     ss >> json;
 
-    _load_project_json_files(&json);
-    _load_project_json_project(&json);
-    _load_project_json_menu(&json);
-}
+    // Loading files
+    for (size_t i = 0; i < json.at("files").size(); i++) {
+        files.push_back(std::filesystem::absolute(json.at("files").at(i)));
+    }
 
-
-void project::_load_project_json_project(nlohmann::json* json) {
-    if(json->contains("project")) {
-        if(json->at("project").contains("name") && json->at("project")["name"].is_string()) {
-            name = json->at("project")["name"];
+    // Loading project object
+    if(json.contains("project")) {
+        if(json.at("project").contains("name")) {
+            name = json.at("project")["name"];
         } else {
-            std::cerr << "Project has no name!\n";
+            std::cerr << "Project has no name, update json file!\n";
             exit(-1);
         }
 
-        if(json->at("project").contains("default-file") && json->at("project")["default-file"].is_string()) {
-            for (size_t i = 0; i < files.size(); i++) {
-                if(files[i] == std::filesystem::absolute(json->at("project")["default-file"])) {
-                    default_file = &files[i];
-                }
-            }
+        if(json.at("project").contains("default-file")) {
+            default_file = get_file_pointer(json.at("project")["default-file"]);
         } else {
-            std::cerr << "Project has to have default-file!\n";
+            std::cerr << "Project has no default-file, update json file!\n";
             exit(-1);
+        }
+    }
+    
+    // Loading toc/menu
+    if(json.contains("menu")) {
+        menu.resize(json.at("menu").size());
+        for (size_t i = 0; i < json.at("menu").size(); i++) {
+            load_toc(&json.at("menu")[i], &menu[i]);
         }
     } else {
-        std::cerr << "json file must contain project object!\n";
-        exit(-1);
+        std::cerr << "No toc/menu found in json file, update json file!\n";
     }
 }
 
-void project::_load_project_json_files(nlohmann::json* json) {
-    if (json->contains("files") && json->at("files").is_array() && json->at("files")[0].is_string()) {
-        for (size_t i = 0; i < json->at("files").size(); i++) {
-            if(json->at("files")[i].is_string()) {
-                files.push_back(std::filesystem::absolute(json->at("files")[i]));
-            } else {
-                std::cerr << "One of the files in json file is not a string!\n";
-            }
+
+
+std::filesystem::path* project::get_file_pointer(std::filesystem::path file) {
+    file = std::filesystem::absolute(file);
+    for (size_t i = 0; i < files.size(); i++) {
+        if(files[i] == file) {
+            return &files[i];
         }
-    } else{
-        std::cerr << "No files found in json file, generated help file will be empty!\n";
     }
+
+    std::cerr << "get_file_pointer(): Couldnt find pointer to file: " << file.string() << ".";
+    exit(-1);
 }
 
-void project::_load_project_json_menu(nlohmann::json* json, menu_item* item) {
-    if(item == nullptr) {
-        if(!json->contains("menu")) {
-            std::cerr << "No menu defined in json file!\n";
-            return;
-        }
 
-        for (size_t i = 0; i < json->at("menu").size(); i++) {
-            menu.push_back(menu_item());
-            _load_project_json_menu(&json->at("menu")[i], &menu[i]);
+void project::load_toc(nlohmann::json* json, menu_item* item) {
+    if(json->size() == 2 && json->at(0).is_string() && json->at(1).is_string()) {
+        item->name = json->at(0);
+        for (size_t i = 0; i < files.size(); i++) {
+            if(files[i] == std::filesystem::absolute(json->at(1))) {
+                item->file = &files[i];
+            }
         }
-    } 
+    }
+    
+    else if (json->size() == 2 && json->at(0).is_string() && json->at(1).is_array()) {
+        item->name = json->at(0);
+        for (size_t i = 0; i < json->at(1).size(); i++) {
+            item->contents->push_back(menu_item());
+            load_toc(&json->at(1)[i], &item->contents->at(i));
+        }
+    }
 
-    else {
-        if(json->size() == 2 && json->at(0).is_string() && json->at(1).is_string()) {
-            item->name = json->at(0);
-            for (size_t i = 0; i < files.size(); i++) {
-                if(files[i] == std::filesystem::absolute(json->at(1))) {
-                    item->file = &files[i];
-                }
+    else if (json->size() == 3 && json->at(0).is_string() && json->at(1).is_string() && json->at(2).is_array()) {
+        item->name = json->at(0);
+        for (size_t i = 0; i < files.size(); i++) {
+            if(files[i] == std::filesystem::absolute(json->at(1))) {
+                item->file = &files[i];
             }
         }
-        
-        else if (json->size() == 2 && json->at(0).is_string() && json->at(1).is_array()) {
-            item->name = json->at(0);
-            for (size_t i = 0; i < json->at(1).size(); i++) {
-                item->contents->push_back(menu_item());
-                _load_project_json_menu(&json->at(1)[i], &item->contents->at(i));
-            }
-        }
-
-        else if (json->size() == 3 && json->at(0).is_string() && json->at(1).is_string() && json->at(2).is_array()) {
-            item->name = json->at(0);
-            for (size_t i = 0; i < files.size(); i++) {
-                if(files[i] == std::filesystem::absolute(json->at(1))) {
-                    item->file = &files[i];
-                }
-            }
-            for (size_t i = 0; i < json->at(2).size(); i++) {
-                item->contents->push_back(menu_item());
-                _load_project_json_menu(&json->at(2).at(i), &item->contents->at(i));
-            }
+        for (size_t i = 0; i < json->at(2).size(); i++) {
+            item->contents->push_back(menu_item());
+            load_toc(&json->at(2).at(i), &item->contents->at(i));
         }
     }
 }

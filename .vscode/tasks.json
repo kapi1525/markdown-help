@@ -6,7 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "ninja -C ${config:mesonbuild.buildFolder} -j 4",
+            "command": "ninja -C ${config:mesonbuild.buildFolder}",
             "group": "build"
         },
         {
