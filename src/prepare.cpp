@@ -5,7 +5,6 @@
 void project::prepare_build() {
     _prepare_dirs();
     _convert_files_to_html();
-    debug_print_menu();
     _create_hhp();
     _create_hhc();
 }
