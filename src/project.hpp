@@ -28,6 +28,8 @@ public:
     ~project();
 
     void load_project(std::filesystem::path file);
+    void build();
+
     void prepare_build();
     void compile();
 

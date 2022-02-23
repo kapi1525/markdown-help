@@ -21,13 +21,11 @@ void markdown_help::start() {
     if(arguments.has("t")) {
         proj.temp_path = std::filesystem::absolute(arguments.get("t"));
     }
-
-    proj.prepare_build();
 }
 
 
 void markdown_help::run() {
-    proj.compile();
+    proj.build();
 }
 
 
