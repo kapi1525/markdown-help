@@ -1,1 +1,3 @@
-markdown-help is a small tool that converts markdown files to .chm (Microsoft compiled help)
+markdown-help is a small tool that creates .chm (microsoft html help) files from markdown files, and overall is easier to use.
+You can still use this if you want to use html files it wont touch those, it only converts md files.
+Currently supports only [chmcmd compiler from free pascal](https://wiki.freepascal.org/htmlhelp_compiler), i'll add support for microsofts compiler later, after i cleanup this messy code...
