@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "test help file",
-        "default-file": "file.html"
+        "default-file": "file.md"
     },
 
     "menu": [
