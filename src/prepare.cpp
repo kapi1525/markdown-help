@@ -129,7 +129,7 @@ std::string project::read(std::filesystem::path file_path) {
         ss << file.rdbuf();
         return ss.str();
     } else {
-        std::cerr << "Failed to read file: " << file_path << ", make sure that file exists!";
+        std::cerr << "Failed to read file: " << file_path << ", make sure that file exists!\n";
         exit(-1);
     }
 }
@@ -139,7 +139,7 @@ void project::write(std::filesystem::path file_path, std::string_view text) {
     if(file.is_open()) {
         file << text;
     } else {
-        std::cerr << "Failed to write/create file: " << file_path << "!";
+        std::cerr << "Failed to write/create file: " << file_path << "!\n";
         exit(-1);
     }
 }
