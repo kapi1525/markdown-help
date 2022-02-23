@@ -17,7 +17,7 @@ struct menu_item {
 
 
 enum compiler {
-    hhc,        // Microsoft html help workshop compiler (windows only)
+    // hhc,     // Microsoft html help workshop compiler (windows only)
     chmcmd      // Free pascal html help compiler        (multiplatform)
 };
 

@@ -27,6 +27,7 @@ void markdown_help::start() {
 
 
 void markdown_help::run() {
+    proj.compile();
 }
 
 
