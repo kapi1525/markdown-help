@@ -12,7 +12,7 @@ void markdown_help::start() {
         std::cin.get();
     }
 
-    std::filesystem::path project_file = "mh.proj.json";
+    std::filesystem::path project_file = "mh.json";
 
     if(arguments.has("p")) {
         project_file = arguments.get("p");
