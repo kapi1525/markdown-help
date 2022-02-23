@@ -35,7 +35,8 @@ public:
 
     compiler c = chmcmd;
 
-    std::string name, default_file;
+    std::string name;
+    std::filesystem::path* default_file;
 
     std::filesystem::path output_path = "out";
     std::filesystem::path temp_path   = "temp";
@@ -52,7 +53,9 @@ private:
 
     void _convert_files_to_html();
     std::string _markdown_to_html(std::string_view input);
-    void _create_hhp();
+    void _create_hhp(); // HTML Help project
+    void _create_hhc(); // HTML Help contents (menu)
+    std::string _get_menu_html(menu_item* item = nullptr);
 
     void _prepare_dirs();
     void _cleanup_dirs();

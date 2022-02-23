@@ -11,8 +11,8 @@ void project::load_project(std::filesystem::path path) {
     nlohmann::json json;
     ss >> json;
 
-    _load_project_json_project(&json);
     _load_project_json_files(&json);
+    _load_project_json_project(&json);
     _load_project_json_menu(&json);
 }
 
@@ -27,7 +27,11 @@ void project::_load_project_json_project(nlohmann::json* json) {
         }
 
         if(json->at("project").contains("default-file") && json->at("project")["default-file"].is_string()) {
-            default_file = json->at("project")["default-file"];
+            for (size_t i = 0; i < files.size(); i++) {
+                if(files[i] == std::filesystem::absolute(json->at("project")["default-file"])) {
+                    default_file = &files[i];
+                }
+            }
         } else {
             std::cerr << "Project has to have default-file!\n";
             exit(-1);

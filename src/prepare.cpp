@@ -7,6 +7,7 @@ void project::prepare_build() {
     _convert_files_to_html();
     debug_print_menu();
     _create_hhp();
+    _create_hhc();
 }
 
 
@@ -38,21 +39,67 @@ void project::_create_hhp() {
     ss << "Auto Index=Yes" << "\n";
     ss << "Binary TOC=Yes" << "\n";
     ss << "Compiled File=" << name << ".chm" << "\n";
-    ss << "Contents File=" << "\n";
+    ss << "Contents File=" << name << ".hhc" << "\n";
     ss << "Default Window=main" << "\n";
     ss << "Full-text search=Yes" << "\n";
     ss << "Title=" << name << "\n";
 
     ss << "[WINDOWS]" << "\n";
-    ss << "main=\""<< name <<"\",\"" << "\",,\"" << default_file << "\",\"" << default_file << "\",,,,,0x23520,200,0x1046,,0xB0000,,,,,,0" << "\n";
+    ss << "main=\""<< name <<"\",\"" << name << ".hhc" << "\",,\"" << std::filesystem::relative(*default_file, temp_path).string() << "\",\"" << std::filesystem::relative(*default_file, temp_path).string() << "\",,,,,0x23520,200,0x1046,,0xB0000,,,,,,0" << "\n";
 
     ss << "[FILES]" << "\n";
-    //ss << name << ".hhp\n";
+    // TODO: test this on windows.
+    //ss << name << ".hhp\n"; idk if its needed chmcmd works without it.
     for (size_t i = 0; i < files.size(); i++) {
         ss << std::filesystem::relative(files[i], temp_path).string() << "\n";
     }
 
-    write(temp_path /= name + ".hhp", ss.str());
+    std::filesystem::path path = temp_path / name;
+    path.concat(".hhp");
+    write(path, ss.str());
+}
+
+
+
+void project::_create_hhc() {
+    std::stringstream ss;
+    ss << "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML//EN\"><HTML><HEAD></HEAD><BODY><OBJECT type=\"text/site properties\"></OBJECT><UL>";
+    ss << _get_menu_html();
+    ss << "</UL></BODY></HTML>";
+
+    std::filesystem::path path = temp_path / name;
+    path.concat(".hhc");
+    write(path, ss.str());
+}
+
+
+// <LI><OBJECT type="text/sitemap"><param name="Name" value="name"><param name="Local" value="file"></OBJECT></LI>
+std::string project::_get_menu_html(menu_item* item) {
+    std::stringstream ss;
+    if(item == nullptr) {
+        for (size_t i = 0; i < menu.size(); i++) {
+            ss << _get_menu_html(&menu[i]);
+        }
+        return ss.str();
+    }
+    
+    else {
+        ss << "<LI><OBJECT type=\"text/sitemap\"><param name=\"Name\" value=\"" << item->name << "\"/>";
+        if(item->file != nullptr) {
+            ss << "<param name=\"Local\" value=\"" << std::filesystem::relative(*item->file, temp_path).string() << "\"/>";
+        }
+        ss << "</OBJECT>";
+        if(item->contents->size() > 0) {
+            ss << "<UL>";
+            for (size_t i = 0; i < item->contents->size(); i++) {
+                ss << _get_menu_html(&item->contents->at(i));
+            }
+            ss << "</UL>";
+        }
+        ss << "</LI>";
+
+        return ss.str();
+    }
 }
 
 
