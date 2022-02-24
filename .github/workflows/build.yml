@@ -1,0 +1,36 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v2
+    - uses: ilammy/msvc-dev-cmd@v1.10.0
+    
+    - run: pip install meson ninja
+
+    - name: configure
+      run: meson --buildtype=debugoptimized bin
+    
+    - name: build
+      run: meson compile -C bin
+  
+  
+  build-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v2
+    
+    - run: pip install meson ninja
+
+    - name: configure
+      run: meson --buildtype=debugoptimized bin
+    
+    - name: build
+      run: meson compile -C bin
