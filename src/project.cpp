@@ -8,8 +8,9 @@ project::~project() {}
 
 void project::load_project(std::filesystem::path file) {
     std::cout << "Loading project: " << file.string() << "...\n";
+    project_file = std::filesystem::absolute(file);
 
-    std::stringstream ss(read(std::filesystem::absolute(file)));
+    std::stringstream ss(read(project_file));
     nlohmann::json json;
     ss >> json;
 

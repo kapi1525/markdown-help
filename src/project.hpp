@@ -37,6 +37,10 @@ public:
 
     compiler c = chmcmd;
 
+
+    std::filesystem::path project_file;
+
+
     std::string name;
     std::filesystem::path* default_file;
 
