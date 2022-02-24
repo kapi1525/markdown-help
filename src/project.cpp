@@ -64,11 +64,7 @@ std::filesystem::path* project::get_file_pointer(std::filesystem::path file) {
 void project::load_toc(nlohmann::json* json, menu_item* item) {
     if(json->size() == 2 && json->at(0).is_string() && json->at(1).is_string()) {
         item->name = json->at(0);
-        for (size_t i = 0; i < files.size(); i++) {
-            if(files[i] == std::filesystem::absolute(json->at(1))) {
-                item->file = &files[i];
-            }
-        }
+        item->file = get_file_pointer(json->at(1));
     }
     
     else if (json->size() == 2 && json->at(0).is_string() && json->at(1).is_array()) {
@@ -81,11 +77,7 @@ void project::load_toc(nlohmann::json* json, menu_item* item) {
 
     else if (json->size() == 3 && json->at(0).is_string() && json->at(1).is_string() && json->at(2).is_array()) {
         item->name = json->at(0);
-        for (size_t i = 0; i < files.size(); i++) {
-            if(files[i] == std::filesystem::absolute(json->at(1))) {
-                item->file = &files[i];
-            }
-        }
+        item->file = get_file_pointer(json->at(1));
         for (size_t i = 0; i < json->at(2).size(); i++) {
             item->contents->push_back(menu_item());
             load_toc(&json->at(2).at(i), &item->contents->at(i));
