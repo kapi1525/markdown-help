@@ -18,6 +18,11 @@ jobs:
     
     - name: build
       run: meson compile -C bin
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: markdown-help
+        path: bin/markdown-help.exe
   
   
   build-ubuntu:
@@ -34,3 +39,8 @@ jobs:
     
     - name: build
       run: meson compile -C bin
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: markdown-help
+        path: bin/markdown-help
