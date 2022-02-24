@@ -21,7 +21,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: markdown-help
+        name: markdown-help-windows
         path: bin/markdown-help.exe
   
   
@@ -42,5 +42,5 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: markdown-help
+        name: markdown-help-linux
         path: bin/markdown-help
