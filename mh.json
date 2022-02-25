@@ -1,6 +1,9 @@
 {
     "project": {
         "name": "test help file",
+        "output-path": "out",
+        "temp-path": "temp",
+        "create-gitignore": true,
         "default-file": "file.md"
     },
 

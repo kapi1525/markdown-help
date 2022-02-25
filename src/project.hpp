@@ -47,6 +47,8 @@ public:
     std::filesystem::path output_path = "out";
     std::filesystem::path temp_path   = "temp";
 
+    bool create_gitignore = true;
+
     // deques everywhere!
     std::deque<menu_item> menu;
 

@@ -106,11 +106,15 @@ std::string project::_get_menu_html(menu_item* item) {
 void project::_prepare_dirs() {
     if(output_path != std::filesystem::current_path()) {
         std::filesystem::create_directories(output_path);
-        write(output_path / ".gitignore", "*");
+        if(create_gitignore) {
+            write(output_path / ".gitignore", "*");
+        }
     }
     if(temp_path != std::filesystem::current_path()){
         std::filesystem::create_directories(temp_path);
-        write(temp_path / ".gitignore", "*");
+        if(create_gitignore) {
+            write(temp_path / ".gitignore", "*");
+        }
     }
 }
 

@@ -28,6 +28,18 @@ void project::load_project(std::filesystem::path file) {
             exit(-1);
         }
 
+        if(json.at("project").contains("output-path")) {
+            output_path = std::filesystem::absolute(json.at("project")["output-path"]);
+        }
+
+        if(json.at("project").contains("temp-path")) {
+            temp_path = std::filesystem::absolute(json.at("project")["temp-path"]);
+        }
+
+        if(json.at("project").contains("create-gitignore")) {
+            create_gitignore = json.at("project")["create-gitignore"];
+        }
+
         if(json.at("project").contains("default-file")) {
             default_file = get_file_pointer(json.at("project")["default-file"]);
         } else {
