@@ -10,7 +10,7 @@ void markdown_help::start() {
     }
 
     if(arguments.has("h")) {
-        std::cout << "markdown-help [options]\n";
+        std::cout << "Program syntax: markdown-help [options]\n";
         std::cout << "\n";
         std::cout << "Avaiable options:\n";
         std::cout << "-v            Show version string.\n";
