@@ -12,7 +12,7 @@ void project::load_project(std::filesystem::path file) {
 
     std::stringstream ss(read(project_file));
     nlohmann::json json;
-    ss >> json;
+    json = json.parse(ss, nullptr, true, true);
 
     // Loading files
     for (size_t i = 0; i < json.at("files").size(); i++) {
