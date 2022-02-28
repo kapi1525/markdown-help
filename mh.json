@@ -1,4 +1,4 @@
-/*Comments are ignored in json since this commit*/
+/*Comments are ignored in json since bef2a45c35877c3f8ab7ff4c04172ffc174cde8c commit*/
 {
     // Project settings
     "project": {
