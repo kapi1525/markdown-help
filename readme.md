@@ -8,7 +8,7 @@ Configuration is stored in [mh.json](mh.json) file, comments are allowed in json
 
 ## Supported chm compilers:
 
-- [chmcmd from free pascal](https://wiki.freepascal.org/htmlhelp_compiler).
+- [chmcmd](https://wiki.freepascal.org/htmlhelp_compiler) (bundled with free pascal) | [download](https://www.freepascal.org/download.html) | [chocolatey](https://community.chocolatey.org/packages/freepascal)
 
 Support for Microsoft's hhc (i think it was called hhc?) compiler that is bundled with Microsoft Help Workshop will come later.
 
