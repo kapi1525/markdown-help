@@ -1,28 +1,32 @@
+/*Comments are ignored in json since this commit*/
 {
+    // Project settings
     "project": {
-        "name": "test help file",
-        "output-path": "out",
-        "temp-path": "temp",
-        "create-gitignore": true,
-        "default-file": "file.md"
+        "name": "test help file",   // Project name, will be used in window title and as output filename.
+        "output-path": "out",       // Path of output file.
+        "temp-path": "temp",        // Temporary path where converted markdown files are stored.
+        "create-gitignore": true,   // Create ,gitignore with "*" inside temp and output paths.
+        "default-file": "file.md"   // Default file to display when opened help file or pressed home.
     },
 
+    // Menu / TOC (Table of contents)
     "menu": [
-        ["item name", "file.md"],
-        ["item name", "file.md"],
-        ["item name", "file.md", [
+        ["item name", "file.md"],       // first item in array is "item name" its displayed in help file.
+        ["item name", "file.md"],       // Secont item is file which will be displayed when pressed on that item in help file.
+        ["item name", "file.md", [      // optional third item is array of same elements, this will hide them inside this item.
             ["item name", "file.md"],
             ["item name", "file.md"],
             ["item name", "file.md"]
         ]],
-        ["item name", [
+        ["item name", [                 // File item in array is optional when item has contents.
             ["item name", "file.md"],
             ["item name", "file.md"],
             ["item name", "file.md"]
         ]]
     ],
 
-    "files": [
+    // ALL files used in this project.
+    "files": [      // All files listed here will be included in compiled help file.
         "file.md"
     ]
 }
