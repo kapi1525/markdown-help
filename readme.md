@@ -32,6 +32,7 @@ Avaiable options:
 - -v            Show version string.
 - -h            Show help.
 - -d            Wait for user to press enter before executing, usefull for ataching debugger.
+- -i (name)     Creates empty project with specified name.
 - -p (path)     Path to directory with mh.json or file that should be used instead mh.json as config.
 - -o (path)     Override output path.
 - -t (path)     Override temporary path.
