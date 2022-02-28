@@ -3,12 +3,28 @@
 
 
 void markdown_help::start() {
-    if(arguments.has("v") || arguments.has("h")) {
-        std::cout << "markdown-help " << markdown_help_version << "\nCopyright (C) Kacper Bugla 'Kapi' 2022\n\n";
+    if(arguments.has("v")) {
+        std::cout << "markdown-help " << markdown_help_version << "\nCopyright (C) Kacper Bugla 'Kapi' 2022\n";
+        std::cout << "\n";
+        exit(0);
+    }
+
+    if(arguments.has("h")) {
+        std::cout << "markdown-help [options]\n";
+        std::cout << "\n";
+        std::cout << "Avaiable options:\n";
+        std::cout << "-v            Show version string.\n";
+        std::cout << "-h            Show this help message.\n";
+        std::cout << "-d            Wait for user to press enter before executing, usefull for ataching debugger.\n";
+        std::cout << "-p <path>     Path to directory with mh.json or file that should be used instead mh.json as config.\n";
+        std::cout << "-o <path>     Override output path.\n";
+        std::cout << "-t <path>     Override temporary path.\n";
+        std::cout << "\n";
         exit(0);
     }
 
     if(arguments.has("d")) {
+        std::cout << "Press enter to continue";
         std::cin.get();
     }
 
