@@ -1,6 +1,16 @@
-markdown-help is a small tool that creates .chm (microsoft html help) files from markdown files, and overall is easier to use.
-You can still use this if you want to use html files it wont touch those, it only converts md files.
-Currently supports only [chmcmd compiler from free pascal](https://wiki.freepascal.org/htmlhelp_compiler), i'll add support for microsofts compiler later, after i cleanup this messy code...
+
+
+## markdown-help
+
+markdown-help is a "build system" for .chm (microsoft html help) files, tho its more than a build system, it alows you to use markdown files instead of html, hence the name.
+Configuration is stored in [mh.json](mh.json) file, comments are allowed in json.
+
+
+## Supported chm compilers:
+
+- [chmcmd from free pascal](https://wiki.freepascal.org/htmlhelp_compiler).
+
+Support for Microsoft's hhc (i think it was called hhc?) compiler that is bundled with Microsoft Help Workshop will come later.
 
 
 ## Usage
