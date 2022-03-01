@@ -7,15 +7,15 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
+        target-arch: [x86_64]
 
         include:
         - os: windows-latest
           cxx: cl
-          target-arch: [x86, x86_64]
+          target-arch: x86
 
         - os: ubuntu-latest
           cxx: clang
-          target-arch: [x86_64]
 
         - os: macos-latest
           cxx: g++
