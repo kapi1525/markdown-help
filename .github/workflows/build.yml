@@ -8,9 +8,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        target-arch: [x86_64]
+        target-arch: ''
 
         include:
+        - os: windows-latest
+          target-arch: x86_64
+
         - os: windows-latest
           target-arch: x86
 
