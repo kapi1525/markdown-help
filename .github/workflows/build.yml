@@ -9,15 +9,15 @@ jobs:
         os: [windows-latest, ubuntu-latest, macos-latest]
 
         include:
-        - os: windows-*
+        - os: windows-latest
           env:
             CXX: cl
 
-        - os: ubuntu-*
+        - os: ubuntu-latest
           env:
             CXX: g++
 
-        - os: macos-*
+        - os: macos-latest
           env:
             CXX: clang++
           
@@ -30,8 +30,8 @@ jobs:
     - uses: ilammy/msvc-dev-cmd@v1.10.0
       if: ${{ matrix.os }} == windows-*
     
-    - run: pip install meson ninja -r requirements.txt
-    
+    - run: pip install meson ninja
+
     - name: configure
       run: meson --buildtype=release bin
     
