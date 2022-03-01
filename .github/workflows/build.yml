@@ -5,6 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         target-arch: [x86_64]
@@ -12,13 +13,14 @@ jobs:
         include:
         - os: windows-latest
           cxx: cl
-          target-arch: x86
+          target-arch: [x86]
 
         - os: ubuntu-latest
-          cxx: clang
+          cxx: g++
+          target-arch: null # you can do that?
 
         - os: macos-latest
-          cxx: g++
+          cxx: clang++
           # target-arch: [aarch64] ?
     
 
