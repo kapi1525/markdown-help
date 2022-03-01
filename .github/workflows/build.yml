@@ -10,27 +10,35 @@ jobs:
 
         include:
         - os: windows-latest
-          cxx: clang
+          cxx: cl
+          target-os: windows
+          target-arch: [x86, x86_64]
 
         - os: ubuntu-latest
-          cxx: clang++
+          cxx: clang
+          target-os: linux
+          target-arch: [x86_64]
 
         - os: macos-latest
           cxx: g++
-          
+          target-os: macos
+          # target-arch: [aarch64] ?
+    
 
     runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/setup-python@v2
+    - run: pip install meson ninja
+    - uses: ilammy/msvc-dev-cmd@v1
+      if: ${{ matrix.target-os }} == windows
+      with:
+        arch: ${{ matrix.target-arch }}
+    
     - uses: actions/checkout@v3
       with:
         submodules: true
-    - uses: ilammy/msvc-dev-cmd@v1.10.0
-      if: ${{ matrix.os }} == windows-latest
     
-    - run: pip install meson ninja
-
     - name: configure
       run: meson --buildtype=release bin
       env:
