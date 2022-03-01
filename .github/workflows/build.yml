@@ -3,50 +3,38 @@ name: build
 on: [push, pull_request]
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+        include:
+        - os: windows-*
+          env:
+            CXX: cl
+
+        - os: ubuntu-*
+          env:
+            CXX: g++
+
+        - os: macos-*
+          env:
+            CXX: clang++
+          
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
-    
+    - uses: actions/checkout@v1
     - uses: actions/setup-python@v2
     - uses: ilammy/msvc-dev-cmd@v1.10.0
+      if: ${{ matrix.os }} == windows-*
     
-    - run: pip install meson ninja
+    - run: pip install meson ninja -r requirements.txt
 
     - name: configure
-      run: meson --buildtype=debugoptimized bin
-    
-    - name: build
-      run: meson compile -C bin
+      run: |
+        meson --buildtype=release bin
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: markdown-help-windows
-        path: bin/markdown-help.exe
-  
-  
-  build-ubuntu:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
-    
-    - uses: actions/setup-python@v2
-    
-    - run: pip install meson ninja
-
-    - name: configure
-      run: meson --buildtype=debugoptimized bin
-    
-    - name: build
-      run: meson compile -C bin
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: markdown-help-linux
-        path: bin/markdown-help
+    - name: compile
+        meson compile -C bin
