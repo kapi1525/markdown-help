@@ -7,21 +7,19 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
+        target-arch: []
 
         include:
         - os: windows-latest
           cxx: cl
-          target-os: windows
           target-arch: [x86, x86_64]
 
         - os: ubuntu-latest
           cxx: clang
-          target-os: linux
           target-arch: [x86_64]
 
         - os: macos-latest
           cxx: g++
-          target-os: macos
           # target-arch: [aarch64] ?
     
 
@@ -31,7 +29,7 @@ jobs:
     - uses: actions/setup-python@v2
     - run: pip install meson ninja
     - uses: ilammy/msvc-dev-cmd@v1
-      if: ${{ matrix.target-os }} == windows
+      if: ${{ matrix.os }} == windows-latest
       with:
         arch: ${{ matrix.target-arch }}
     
