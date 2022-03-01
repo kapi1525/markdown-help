@@ -11,24 +11,24 @@ jobs:
         target-arch: ['']
 
         include:
-        - os: windows-latest
-          target-arch: 'x86_64'
+          - os: windows-latest
+            target-arch: 'x86_64'
 
-        - os: windows-latest
-          target-arch: 'x86'
+          - os: windows-latest
+            target-arch: 'x86'
 
-        - os: windows-latest
-          target-arch: 'amd64_arm'
+          - os: windows-latest
+            target-arch: 'amd64_arm'
 
-        - os: windows-latest
-          target-arch: 'amd64_arm64'
+          - os: windows-latest
+            target-arch: 'amd64_arm64'
 
 
-        - os: ubuntu-latest
-          # target-arch: null # no.
+          - os: ubuntu-latest
+            # target-arch: null # no.
 
-        - os: macos-latest
-          # target-arch: [aarch64] ?
+          - os: macos-latest
+            # target-arch: [aarch64] ?
     
 
     runs-on: ${{ matrix.os }}
