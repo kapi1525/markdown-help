@@ -13,8 +13,13 @@ jobs:
         include:
         - os: windows-latest
           target-arch: x86
+
+        - os: windows-latest
           target-arch: amd64_arm
+
+        - os: windows-latest
           target-arch: amd64_arm64
+
 
         - os: ubuntu-latest
           # target-arch: null # no.
