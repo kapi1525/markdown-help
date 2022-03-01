@@ -12,7 +12,9 @@ jobs:
 
         include:
         - os: windows-latest
-          target-arch: [x86, amd64_arm, amd64_arm64]
+          target-arch: x86
+          target-arch: amd64_arm
+          target-arch: amd64_arm64
 
         - os: ubuntu-latest
           # target-arch: null # no.
