@@ -12,15 +12,12 @@ jobs:
 
         include:
         - os: windows-latest
-          cxx: cl
           target-arch: x86
 
         - os: ubuntu-latest
-          cxx: g++
           # target-arch: null # no.
 
         - os: macos-latest
-          cxx: clang++
           # target-arch: [aarch64] ?
     
 
@@ -40,8 +37,6 @@ jobs:
     
     - name: configure
       run: meson --buildtype=release bin
-      env:
-        CXX: ${{ matrix.cxx }}
     
     - name: compile
       run: meson compile -C bin
