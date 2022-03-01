@@ -17,7 +17,7 @@ jobs:
 
         - os: ubuntu-latest
           cxx: g++
-          target-arch: null # you can do that?
+          # target-arch: null # no.
 
         - os: macos-latest
           cxx: clang++
@@ -30,7 +30,7 @@ jobs:
     - uses: actions/setup-python@v2
     - run: pip install meson ninja
     - uses: ilammy/msvc-dev-cmd@v1
-      if: ${{ matrix.os }} == windows-latest
+      if: runner.os == 'Windows'
       with:
         arch: ${{ matrix.target-arch }}
     
