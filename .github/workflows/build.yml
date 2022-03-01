@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        target-arch: "why"
+        target-arch: why
 
         include:
         - os: windows-latest
