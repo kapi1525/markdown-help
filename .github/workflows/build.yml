@@ -31,10 +31,9 @@ jobs:
       if: ${{ matrix.os }} == windows-*
     
     - run: pip install meson ninja -r requirements.txt
-
+    
     - name: configure
-      run: |
-        meson --buildtype=release bin
-
+      run: meson --buildtype=release bin
+    
     - name: compile
-        meson compile -C bin
+      run: meson compile -C bin
