@@ -10,22 +10,19 @@ jobs:
 
         include:
         - os: windows-latest
-          env:
-            CXX: cl
+          cxx: clang
 
         - os: ubuntu-latest
-          env:
-            CXX: clang++
+          cxx: clang++
 
         - os: macos-latest
-          env:
-            CXX: clang++
+          cxx: g++
           
 
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
     - uses: ilammy/msvc-dev-cmd@v1.10.0
       if: ${{ matrix.os }} == windows-latest
@@ -34,6 +31,8 @@ jobs:
 
     - name: configure
       run: meson --buildtype=release bin
+      env:
+        CXX: ${{ matrix.cxx }}
     
     - name: compile
       run: meson compile -C bin
