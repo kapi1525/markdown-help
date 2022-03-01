@@ -13,7 +13,7 @@ jobs:
         include:
         - os: windows-latest
           cxx: cl
-          target-arch: [x86]
+          target-arch: x86
 
         - os: ubuntu-latest
           cxx: g++
