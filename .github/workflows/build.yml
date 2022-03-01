@@ -53,4 +53,6 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}
-        path: bin/markdown-help+.exe
+        path: |
+          bin/markdown-help
+          bin/markdown-help.exe
