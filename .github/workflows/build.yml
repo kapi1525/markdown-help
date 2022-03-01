@@ -13,13 +13,11 @@ jobs:
 
           - os: windows-latest
             target-arch: 'x86'
-            
+
 
           - os: ubuntu-latest
-            # target-arch: null # no.
 
           - os: macos-latest
-            # target-arch: [aarch64] ?
     
 
     runs-on: ${{ matrix.os }}
@@ -36,6 +34,9 @@ jobs:
       with:
         submodules: true
     
+    - run: g++ -dumpmachine
+    - run: clang -dumpmachine
+
     - name: configure
       run: meson --buildtype=release bin
     
