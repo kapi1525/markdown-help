@@ -13,5 +13,5 @@ public:
 
     project proj;
 
-    version markdown_help_version = {0,1,0};
+    version markdown_help_version = {0,2,0};
 };
