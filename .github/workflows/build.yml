@@ -65,11 +65,11 @@ jobs:
 
 
     - name: configure
-      if: ${{ matrix.cross }} == false
+      if: matrix.cross == false
       run: meson --buildtype=release bin
     
     - name: configure (cross)
-      if: ${{ matrix.cross }} == true
+      if: matrix.cross == true
       run: meson --buildtype=release bin --cross-file ${{ matrix.cross-file }}
     
 
