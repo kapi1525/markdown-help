@@ -90,11 +90,11 @@ jobs:
 
     
     - name: bundle (Windows)
-      if: matrix.os-fancy-name == 'windows'
+      if: (matrix.os-fancy-name) == 'windows' && (github.event_name == 'release')
       run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip bin\markdown-help.exe
 
     - name: bundle (Linux / Mac)
-      if: matrix.os-fancy-name != 'windows'
+      if: (matrix.os-fancy-name) != 'windows' && (github.event_name == 'release')
       run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz bin/markdown-help
 
     
