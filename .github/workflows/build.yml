@@ -1,52 +1,105 @@
 name: build
 
-on: [push, pull_request]
+on: 
+  push:
+  pull_request:
+  release:
+     types:
+       - published
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows x86
+          - os: windows-latest
+            os-fancy-name: 'windows'
+            target-arch-fancy-name: 'x86_64'
+            target-arch: 'x86_64'
+
+          - os: windows-latest
+            os-fancy-name: 'windows'
+            target-arch-fancy-name: 'x86'
+            target-arch: 'x86'
+
+          # Windows ARM
+          - os: windows-latest
+            os-fancy-name: 'windows'
+            target-arch-fancy-name: 'arm'
+            target-arch: 'amd64_arm'
+            cross: true
+            cross-file: 'cross/windows-arm.txt'
+
+          - os: windows-latest
+            os-fancy-name: 'windows'
+            target-arch-fancy-name: 'aarch64' # aka arm64
+            target-arch: 'amd64_arm64'
+            cross: true
+            cross-file: 'cross/windows-aarch64.txt'
+
+
+          # Linux
+          - os: ubuntu-latest
+            os-fancy-name: 'linux'
+            target-arch-fancy-name: 'x86_64'
+            target-arch: 'x86_64'
+
+
+          # MacOS (i actualy dont know if this is working xd, i dont have a mac, it would be nice if someone would test this on mac.)
+          - os: macos-latest
+            os-fancy-name: 'macos'
+            target-arch-fancy-name: 'x86_64'
+            target-arch: 'x86_64'
+    
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+    - run: pip install meson ninja
+    - uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows'
+      with:
+        arch: ${{ matrix.target-arch }}
+    
+    - uses: actions/checkout@v3
       with:
         submodules: true
-    
-    - uses: actions/setup-python@v2
-    - uses: ilammy/msvc-dev-cmd@v1.10.0
-    
-    - run: pip install meson ninja
+
 
     - name: configure
-      run: meson --buildtype=debugoptimized bin
+      if: matrix.cross == false
+      run: meson --buildtype=release bin
     
-    - name: build
+    - name: configure (cross)
+      if: matrix.cross == true
+      run: meson --buildtype=release bin --cross-file ${{ matrix.cross-file }}
+    
+
+    - name: compile
       run: meson compile -C bin
 
     - uses: actions/upload-artifact@v2
       with:
-        name: markdown-help-windows
-        path: bin/markdown-help.exe
-  
-  
-  build-ubuntu:
-    runs-on: ubuntu-latest
+        name: markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}
+        path: |
+          bin/markdown-help.exe
+          bin/markdown-help
 
-    steps:
-    - uses: actions/checkout@v2
+    
+    - name: bundle (Windows)
+      if: matrix.os-fancy-name == 'windows'
+      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip bin\markdown-help.exe
+
+    - name: bundle (Linux / Mac)
+      if: matrix.os-fancy-name != 'windows'
+      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz bin/markdown-help
+
+    
+    - uses: AButler/upload-release-assets@v2.0
+      if: github.event_name == 'release'
       with:
-        submodules: true
-    
-    - uses: actions/setup-python@v2
-    
-    - run: pip install meson ninja
-
-    - name: configure
-      run: meson --buildtype=debugoptimized bin
-    
-    - name: build
-      run: meson compile -C bin
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: markdown-help-linux
-        path: bin/markdown-help
+        files: 'markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip;markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
