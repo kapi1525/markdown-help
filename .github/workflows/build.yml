@@ -81,24 +81,23 @@ jobs:
     - name: compile
       run: meson compile -C bin
 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}
+        path: |
+          bin/markdown-help.exe
+          bin/markdown-help
+
     
     - name: bundle (Windows)
       if: matrix.os-fancy-name == 'windows'
-      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip bin/markdown-help
+      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip bin\markdown-help.exe
 
     - name: bundle (Linux / Mac)
       if: matrix.os-fancy-name != 'windows'
       run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz bin/markdown-help
 
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}
-        path: |
-          markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip
-          markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz
     
-
     - uses: AButler/upload-release-assets@v2.0
       if: github.event_name == 'release'
       with:
