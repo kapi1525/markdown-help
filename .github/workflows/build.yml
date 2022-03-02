@@ -16,26 +16,26 @@ jobs:
           # Windows x86
           - os: windows-latest
             os-fancy-name: 'windows'
-            target-arch: 'x86_64'
             target-arch-fancy-name: 'x86_64'
+            target-arch: 'x86_64'
 
           - os: windows-latest
             os-fancy-name: 'windows'
-            target-arch: 'x86'
             target-arch-fancy-name: 'x86'
+            target-arch: 'x86'
 
           # Windows ARM
           - os: windows-latest
             os-fancy-name: 'windows'
-            target-arch: 'amd64_arm'
             target-arch-fancy-name: 'arm'
+            target-arch: 'amd64_arm'
             cross: true
             cross-file: 'cross/windows-arm.txt'
 
           - os: windows-latest
             os-fancy-name: 'windows'
-            target-arch: 'amd64_arm64'
             target-arch-fancy-name: 'aarch64' # aka arm64
+            target-arch: 'amd64_arm64'
             cross: true
             cross-file: 'cross/windows-aarch64.txt'
 
@@ -43,15 +43,15 @@ jobs:
           # Linux
           - os: ubuntu-latest
             os-fancy-name: 'linux'
-            target-arch: 'x86_64'
             target-arch-fancy-name: 'x86_64'
+            target-arch: 'x86_64'
 
 
-          # MacOS (i actualy dont know if this is working xd, i dont have a mac.)
+          # MacOS (i actualy dont know if this is working xd, i dont have a mac, it would be nice if someone would test this on mac.)
           - os: macos-latest
             os-fancy-name: 'macos'
-            target-arch: 'x86_64'
             target-arch-fancy-name: 'x86_64'
+            target-arch: 'x86_64'
     
 
     runs-on: ${{ matrix.os }}
@@ -81,15 +81,26 @@ jobs:
     - name: compile
       run: meson compile -C bin
 
+    
+    - name: bundle (Windows)
+      if: matrix.os-fancy-name == 'windows'
+      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip bin/markdown-help
+
+    - name: bundle (Linux / Mac)
+      if: matrix.os-fancy-name != 'windows'
+      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz bin/markdown-help
+
+
     - uses: actions/upload-artifact@v2
       with:
         name: markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}
         path: |
-          bin/markdown-help
-          bin/markdown-help.exe
+          markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip
+          markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz
     
-    - uses: AButler/upload-release-assets@v2.0
+
+    - uses: AButler/upload-release-assets@v2
       if: github.event_name == 'release'
       with:
-        files: 'bin/markdown-help'
+        files: 'markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip;markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
