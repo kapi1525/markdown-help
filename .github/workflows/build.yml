@@ -99,7 +99,7 @@ jobs:
           markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz
     
 
-    - uses: AButler/upload-release-assets@v2
+    - uses: AButler/upload-release-assets@v2.0
       if: github.event_name == 'release'
       with:
         files: 'markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip;markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz'
