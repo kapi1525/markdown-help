@@ -71,7 +71,7 @@ jobs:
     
 
     - uses: hendrikmuhs/ccache-action@v1
-      if: (matrix.os-fancy-name) == 'windows'
+      if: (matrix.os-fancy-name) != 'windows'
       with:
         key: ${{ matrix.os }}-${{ matrix.target-arch-fancy-name }}
 
