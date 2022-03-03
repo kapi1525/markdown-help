@@ -66,6 +66,8 @@ jobs:
         arch: ${{ matrix.target-arch }}
     
     - uses: actions/setup-python@v3
+      with:
+        cache: 'pip'
     - run: pip install meson ninja
     
 
