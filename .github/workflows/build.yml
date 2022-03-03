@@ -86,7 +86,7 @@ jobs:
     
 
     - name: compile
-      run: meson compile -C bin
+      run: meson compile -C bin -j 10
 
     - uses: actions/upload-artifact@v2
       if: github.event_name != 'release'
