@@ -57,16 +57,22 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/setup-python@v2
-    - run: pip install meson ninja
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+
     - uses: ilammy/msvc-dev-cmd@v1
       if: runner.os == 'Windows'
       with:
         arch: ${{ matrix.target-arch }}
     
-    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v2
+    - run: pip install meson ninja
+    
+
+    - uses: hendrikmuhs/ccache-action@v1
       with:
-        submodules: true
+        key: ${{ matrix.os }}-${{ matrix.target-arch-fancy-name }}
 
 
     - name: configure
