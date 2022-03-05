@@ -85,19 +85,19 @@ void markdown_help::start() {
         exit(-1);
     }
 
-    proj.load_project(project_file.string());
+    proj = new project(project_file.string());
 
     if(arguments.has("o")) {
-        proj.output_path = std::filesystem::absolute(arguments.get("o"));
+        proj->output_path = std::filesystem::absolute(arguments.get("o"));
     }
     if(arguments.has("t")) {
-        proj.temp_path = std::filesystem::absolute(arguments.get("t"));
+        proj->temp_path = std::filesystem::absolute(arguments.get("t"));
     }
 }
 
 
 void markdown_help::run() {
-    proj.build();
+    proj->build();
 }
 
 

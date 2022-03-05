@@ -11,7 +11,7 @@ public:
     void run();
     void end();
 
-    project proj;
+    project* proj;
 
     version markdown_help_version = {0,2,0};
 };

@@ -2,17 +2,15 @@
 
 
 
-project::project() {}
-project::~project() {}
+project::project(std::filesystem::path file_path) {
+    proj_file = std::filesystem::absolute(file_path).make_preferred();
 
+    apf::log::info("Loading project file: \"" + proj_file.string() + "\"...");
+    apf::log::note("Currently no chechs are made for required options in json file, if json file dosent contain one of those markdown-help will crash.");
 
-void project::load_project(std::filesystem::path file) {
-    std::cout << "Loading project: " << file.string() << "...\n";
-    project_file = std::filesystem::absolute(file);
-
-    std::stringstream ss(read(project_file));
     nlohmann::json json;
-    json = json.parse(ss, nullptr, true, true);
+    json = json.parse(std::stringstream(std::string(apf::file::read(proj_file))), nullptr, true, true);
+
 
     // Loading files
     for (size_t i = 0; i < json.at("files").size(); i++) {
@@ -20,61 +18,44 @@ void project::load_project(std::filesystem::path file) {
     }
 
     // Loading project object
-    if(json.contains("project")) {
-        if(json.at("project").contains("name")) {
-            name = json.at("project")["name"];
-        } else {
-            std::cerr << "Project has no name, update json file!\n";
-            exit(-1);
-        }
-
-        if(json.at("project").contains("output-path")) {
-            output_path = std::filesystem::absolute(json.at("project")["output-path"]);
-        }
-
-        if(json.at("project").contains("temp-path")) {
-            temp_path = std::filesystem::absolute(json.at("project")["temp-path"]);
-        }
-
-        if(json.at("project").contains("create-gitignore")) {
-            create_gitignore = json.at("project")["create-gitignore"];
-        }
-
-        if(json.at("project").contains("default-file")) {
-            default_file = get_file_pointer(json.at("project")["default-file"]);
-        } else {
-            std::cerr << "Project has no default-file, update json file!\n";
-            exit(-1);
-        }
-    }
+    name = json.at("project")["name"];
+    default_file = get_file_pointer(json.at("project")["default-file"]);
     
+    if(json.at("project").contains("output-path")) {
+        output_path = std::filesystem::absolute(json.at("project")["output-path"]);
+    }
+
+    if(json.at("project").contains("temp-path")) {
+        temp_path = std::filesystem::absolute(json.at("project")["temp-path"]);
+    }
+
+    if(json.at("project").contains("create-gitignore")) {
+        create_gitignore = json.at("project")["create-gitignore"];
+    }
+
     // Loading toc/menu
-    if(json.contains("menu")) {
-        menu.resize(json.at("menu").size());
-        for (size_t i = 0; i < json.at("menu").size(); i++) {
-            load_toc(&json.at("menu")[i], &menu[i]);
-        }
-    } else {
-        std::cerr << "No toc/menu found in json file, update json file!\n";
+    table_of_contents.resize(json.at("menu").size());
+    for (size_t i = 0; i < json.at("menu").size(); i++) {
+        load_toc(&json.at("menu")[i], &table_of_contents[i]);
+    }
+}
+
+
+project::~project() {
+    for (size_t i = 0; i < table_of_contents.size(); i++) {
+        unload_toc(&table_of_contents[i]);
     }
 }
 
 
 
-std::filesystem::path* project::get_file_pointer(std::filesystem::path file) {
-    file = std::filesystem::absolute(file);
-    for (size_t i = 0; i < files.size(); i++) {
-        if(files[i] == file) {
-            return &files[i];
-        }
-    }
-
-    std::cerr << "get_file_pointer(): Couldnt find pointer to file: " << file.string() << ".";
-    exit(-1);
+bool project::build() {
+    return false;
 }
 
 
-void project::load_toc(nlohmann::json* json, menu_item* item) {
+
+void project::load_toc(nlohmann::json* json, toc_item* item) {
     if(json->size() == 2 && json->at(0).is_string() && json->at(1).is_string()) {
         item->name = json->at(0);
         item->file = get_file_pointer(json->at(1));
@@ -82,8 +63,11 @@ void project::load_toc(nlohmann::json* json, menu_item* item) {
     
     else if (json->size() == 2 && json->at(0).is_string() && json->at(1).is_array()) {
         item->name = json->at(0);
+
+        item->contents = new std::deque<toc_item>(json->at(1).size());
+
         for (size_t i = 0; i < json->at(1).size(); i++) {
-            item->contents->push_back(menu_item());
+            item->contents->push_back(toc_item());
             load_toc(&json->at(1)[i], &item->contents->at(i));
         }
     }
@@ -91,36 +75,42 @@ void project::load_toc(nlohmann::json* json, menu_item* item) {
     else if (json->size() == 3 && json->at(0).is_string() && json->at(1).is_string() && json->at(2).is_array()) {
         item->name = json->at(0);
         item->file = get_file_pointer(json->at(1));
+
+        item->contents = new std::deque<toc_item>(json->at(2).size());
+
         for (size_t i = 0; i < json->at(2).size(); i++) {
-            item->contents->push_back(menu_item());
+            item->contents->push_back(toc_item());
             load_toc(&json->at(2).at(i), &item->contents->at(i));
         }
     }
 }
 
 
+void project::unload_toc(toc_item* item) {
+    if(item->contents != nullptr) {
+        for (size_t i = 0; i < item->contents->size(); i++) {
+            unload_toc(&item->contents->at(i));
+        }
+        delete item->contents;
+    }
+}
 
-void project::debug_print_menu(menu_item* item, size_t level) {
-    for (size_t i = 0; i < level; i++) {
-        std::cout << "  ";
+
+
+std::filesystem::path* project::get_file_pointer(std::filesystem::path file) {
+    file = std::filesystem::absolute(file).make_preferred();
+
+    if(!std::filesystem::exists(file)) {
+        apf::log::fatal("File: \"" + file.string() + "\", dosent exist.");
+        abort();
     }
 
-    if(item == nullptr) {
-        std::cout << "\nMenu:\n";
-        for (size_t i = 0; i < menu.size(); i++) {
-            debug_print_menu(&menu[i], level+1);
+    for (size_t i = 0; i < files.size(); i++) {
+        if(file == files[i]) {
+            return &files[i];
         }
-        std::cout << "\n";
     }
     
-    else {
-        std::cout << item->name << " - ";
-        if(item->file != nullptr) {
-            std::cout << item->file->string();
-        }
-        std::cout << "\n";
-        for (size_t i = 0; i < item->contents->size(); i++) {
-            debug_print_menu(&item->contents->at(i), level+1);
-        }
-    }
+    apf::log::fatal("File: \"" + file.string() + "\", wasnt found in files deque.");
+    abort();
 }
