@@ -2,6 +2,7 @@
 #include <deque>
 #include <filesystem>
 #include "apf/logs.hpp"
+#include "apf/file.hpp"
 #include "nlohmann/json.hpp"
 
 
@@ -25,6 +26,8 @@ public:
     std::string name;
     std::filesystem::path proj_file;
 
+    std::filesystem::path* default_file;
+
     std::filesystem::path output_path = "out";
     std::filesystem::path temp_path   = "temp";
 
@@ -37,6 +40,8 @@ public:
 
 private:
     void load_toc(nlohmann::json* json, toc_item* item);
+    void unload_toc(toc_item* item);
+
     std::filesystem::path* get_file_pointer(std::filesystem::path file);
 
 };
