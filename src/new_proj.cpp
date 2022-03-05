@@ -50,6 +50,7 @@ project::~project() {
 
 
 bool project::build() {
+    return false;
 }
 
 
