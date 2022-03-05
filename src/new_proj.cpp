@@ -28,10 +28,15 @@ std::filesystem::path* project::get_file_pointer(std::filesystem::path file) {
 
     if(!std::filesystem::exists(file)) {
         apf::log::fatal("File: \"" + file.string() + "\", dosent exist.");
+        abort();
     }
 
     for (size_t i = 0; i < files.size(); i++) {
-        /* code */
+        if(file == files[i]) {
+            return &files[i];
+        }
     }
     
+    apf::log::fatal("File: \"" + file.string() + "\", wasnt found in files deque.");
+    abort();
 }
