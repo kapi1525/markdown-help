@@ -92,7 +92,10 @@ bool project::build() {
     // Run compiler (chmcmd or hhc)
     std::filesystem::current_path(temp_path);   // chmcmd creates chm file in current path.
     apf::log::custom("CMD", ("chmcmd \"" + hhp_file.string() + "\""));
-    system(("chmcmd \"" + hhp_file.string() + "\"").c_str());
+    if(system(("chmcmd \"" + hhp_file.string() + "\"").c_str())) {
+        apf::log::fatal("chmcmd didnt return 0.");
+        return false;
+    }
 
 
     // Copy chm to out
