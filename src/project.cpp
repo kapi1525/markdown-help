@@ -49,12 +49,6 @@ project::~project() {
 
 
 
-bool project::build() {
-    return false;
-}
-
-
-
 void project::load_toc(nlohmann::json* json, toc_item* item) {
     if(json->size() == 2 && json->at(0).is_string() && json->at(1).is_string()) {
         item->name = json->at(0);

@@ -97,7 +97,10 @@ void markdown_help::start() {
 
 
 void markdown_help::run() {
-    proj->build();
+    if(!proj->build()) {
+        apf::log::fatal("Compilation terminated.");
+        abort();
+    }
 }
 
 

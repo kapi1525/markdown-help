@@ -4,6 +4,7 @@
 #include "apf/logs.hpp"
 #include "apf/file.hpp"
 #include "nlohmann/json.hpp"
+#include "maddy/parser.h"
 
 
 
@@ -25,6 +26,9 @@ public:
 
     std::string name;
     std::filesystem::path proj_file;
+    std::filesystem::path toc_file;
+    std::filesystem::path hhp_file;
+    std::filesystem::path chm_file;
 
     std::filesystem::path* default_file;
 
@@ -32,6 +36,7 @@ public:
     std::filesystem::path temp_path   = "temp";
 
     bool create_gitignore = true;
+    bool convert_md_to_html = true;
 
     toc table_of_contents;
 
@@ -41,6 +46,9 @@ public:
 private:
     void load_toc(nlohmann::json* json, toc_item* item);
     void unload_toc(toc_item* item);
+    std::string export_toc(toc_item* item = nullptr);
+
+    std::string md_to_html(std::string markdown);
 
     std::filesystem::path* get_file_pointer(std::filesystem::path file);
 
