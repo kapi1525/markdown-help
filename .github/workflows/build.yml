@@ -16,7 +16,7 @@ jobs:
           - os: windows-latest
             os-fancy-name: 'windows'
             target-arch-fancy-name: 'x86_64'
-            target-arch: 'x86_64'
+            target-arch: 'x86_64' # used by msvc-dev-cmd action
 
           - os: windows-latest
             os-fancy-name: 'windows'
@@ -44,6 +44,14 @@ jobs:
             os-fancy-name: 'linux'
             target-arch-fancy-name: 'x86_64'
             target-arch: 'x86_64'
+
+          # Linux ARM
+          - os: ubuntu-latest
+            os-fancy-name: 'linux'
+            target-arch-fancy-name: 'aarch64' # aka arm64
+            target-arch: 'aarch64'
+            cross: true
+            cross-file: 'cross/linux-aarch64.txt'
 
 
           # MacOS (i actualy dont know if this is working xd, i dont have a mac, it would be nice if someone would test this on mac.)
@@ -76,6 +84,10 @@ jobs:
       if: (matrix.os-fancy-name) != 'windows'
       with:
         key: ${{ matrix.os }}-${{ matrix.target-arch-fancy-name }}
+
+
+    - run: sudo apt install gcc-aarch64-linux-gnu -y
+      if: (matrix.os-fancy-name) == 'linux' && (matrix.target-arch) == 'aarch64'
 
 
     - name: configure
