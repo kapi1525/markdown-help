@@ -86,7 +86,7 @@ jobs:
         key: ${{ matrix.os }}-${{ matrix.target-arch-fancy-name }}
 
 
-    - run: sudo apt update -y && sudo apt install gcc-aarch64-linux-gnu -y
+    - run: sudo apt update -y && sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu -y
       if: (matrix.os-fancy-name) == 'linux' && (matrix.target-arch) == 'aarch64'
 
 
