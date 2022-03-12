@@ -70,7 +70,7 @@ jobs:
     - uses: ilammy/msvc-dev-cmd@v1
       if: matrix.os-fancy-name == 'windows'
       with:
-        arch: ${{ msvc-target-arch }}
+        arch: ${{ matrix.msvc-target-arch }}
     
     - uses: actions/setup-python@v3
       with:
