@@ -45,7 +45,7 @@ jobs:
             os-fancy-name: 'linux'
             target-arch: 'x86'
             cross-file: 'cross/linux-x86.txt'
-            apt-packages: 'libstdc++-10-dev-i386-cross'
+            apt-packages: 'g++-i686-linux-gnu'
 
           - os: ubuntu-latest
             os-fancy-name: 'linux'
