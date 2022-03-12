@@ -26,14 +26,14 @@ jobs:
           - os: windows-latest
             os-fancy-name: 'windows'
             target-arch: 'arm'
-            msvc-target-arch: 'amd64_arm'
             cross-file: 'cross/windows-arm.txt'
+            msvc-target-arch: 'amd64_arm'
 
           - os: windows-latest
             os-fancy-name: 'windows'
             target-arch: 'aarch64'
-            msvc-target-arch: 'amd64_arm64'
             cross-file: 'cross/windows-aarch64.txt'
+            msvc-target-arch: 'amd64_arm64'
 
 
           # Linux
@@ -43,15 +43,20 @@ jobs:
 
           - os: ubuntu-latest
             os-fancy-name: 'linux'
+            target-arch: 'x86'
+            cross-file: 'cross/linux-x86.txt'
+
+          - os: ubuntu-latest
+            os-fancy-name: 'linux'
             target-arch: 'arm'
-            apt-packages: 'g++-arm-linux-gnueabi'
             cross-file: 'cross/linux-arm.txt'
+            apt-packages: 'g++-arm-linux-gnueabi'
 
           - os: ubuntu-latest
             os-fancy-name: 'linux'
             target-arch: 'aarch64'
-            apt-packages: 'g++-aarch64-linux-gnu'
             cross-file: 'cross/linux-aarch64.txt'
+            apt-packages: 'g++-aarch64-linux-gnu'
           
 
           # MacOS (i actualy dont know if this is working xd, i dont have a mac, it would be nice if someone would test this on mac.)
