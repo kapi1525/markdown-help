@@ -52,6 +52,12 @@ jobs:
             target-arch: 'aarch64'
             apt-packages: 'g++-aarch64-linux-gnu'
             cross-file: 'cross/linux-aarch64.txt'
+          
+
+          # MacOS (i actualy dont know if this is working xd, i dont have a mac, it would be nice if someone would test this on mac.)
+          - os: macos-latest
+            os-fancy-name: 'macos'
+            target-arch: 'x86_64'
     
 
     runs-on: ${{ matrix.os }}
