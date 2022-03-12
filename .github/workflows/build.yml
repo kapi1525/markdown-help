@@ -48,6 +48,13 @@ jobs:
           # Linux ARM
           - os: ubuntu-latest
             os-fancy-name: 'linux'
+            target-arch-fancy-name: 'arm' # aka arm64
+            target-arch: 'arm'
+            cross: true
+            cross-file: 'cross/linux-arm.txt'
+
+          - os: ubuntu-latest
+            os-fancy-name: 'linux'
             target-arch-fancy-name: 'aarch64' # aka arm64
             target-arch: 'aarch64'
             cross: true
@@ -86,7 +93,10 @@ jobs:
         key: ${{ matrix.os }}-${{ matrix.target-arch-fancy-name }}
 
 
-    - run: sudo apt update -y && sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu -y
+    - run: sudo apt update -y && sudo apt install g++-arm-linux-gnu -y
+      if: (matrix.os-fancy-name) == 'linux' && (matrix.target-arch) == 'arm'
+
+    - run: sudo apt update -y && sudo apt install g++-aarch64-linux-gnu -y
       if: (matrix.os-fancy-name) == 'linux' && (matrix.target-arch) == 'aarch64'
 
 
