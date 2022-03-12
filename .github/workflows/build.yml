@@ -15,57 +15,39 @@ jobs:
           # Windows x86
           - os: windows-latest
             os-fancy-name: 'windows'
-            target-arch-fancy-name: 'x86_64'
-            target-arch: 'x86_64' # used by msvc-dev-cmd action
+            target-arch: 'x86_64'
 
           - os: windows-latest
             os-fancy-name: 'windows'
-            target-arch-fancy-name: 'x86'
             target-arch: 'x86'
 
-          # Windows ARM
           - os: windows-latest
             os-fancy-name: 'windows'
-            target-arch-fancy-name: 'arm'
-            target-arch: 'amd64_arm'
-            cross: true
+            target-arch: 'arm'
             cross-file: 'cross/windows-arm.txt'
 
           - os: windows-latest
             os-fancy-name: 'windows'
-            target-arch-fancy-name: 'aarch64' # aka arm64
-            target-arch: 'amd64_arm64'
-            cross: true
+            target-arch: 'aarch64'
             cross-file: 'cross/windows-aarch64.txt'
 
 
           # Linux
           - os: ubuntu-latest
             os-fancy-name: 'linux'
-            target-arch-fancy-name: 'x86_64'
             target-arch: 'x86_64'
 
-          # Linux ARM
           - os: ubuntu-latest
             os-fancy-name: 'linux'
-            target-arch-fancy-name: 'arm' # aka arm64
             target-arch: 'arm'
-            cross: true
+            apt-packages: 'g++-arm-linux-gnueabi'
             cross-file: 'cross/linux-arm.txt'
 
           - os: ubuntu-latest
             os-fancy-name: 'linux'
-            target-arch-fancy-name: 'aarch64' # aka arm64
             target-arch: 'aarch64'
-            cross: true
+            apt-packages: 'g++-aarch64-linux-gnu'
             cross-file: 'cross/linux-aarch64.txt'
-
-
-          # MacOS (i actualy dont know if this is working xd, i dont have a mac, it would be nice if someone would test this on mac.)
-          - os: macos-latest
-            os-fancy-name: 'macos'
-            target-arch-fancy-name: 'x86_64'
-            target-arch: 'x86_64'
     
 
     runs-on: ${{ matrix.os }}
@@ -76,41 +58,41 @@ jobs:
         submodules: true
 
     - uses: ilammy/msvc-dev-cmd@v1
-      if: runner.os == 'Windows'
-      with:
-        arch: ${{ matrix.target-arch }}
+      if: matrix.os-fancy-name == 'windows'
+     # with:
+      #  arch: ${{ matrix.target-arch }}
     
     - uses: actions/setup-python@v3
       with:
         cache: 'pip'
     
-    - run: pip install meson ninja  -r requirements.txt
+    - name: install meson and ninja.
+      run: pip install meson ninja -r requirements.txt
     
 
     - uses: hendrikmuhs/ccache-action@v1
-      if: (matrix.os-fancy-name) != 'windows'
+      if: matrix.os-fancy-name != 'windows'
       with:
         key: ${{ matrix.os }}-${{ matrix.target-arch-fancy-name }}
 
 
-    - run: sudo apt update -y && sudo apt install g++-arm-linux-gnueabi -y
-      if: (matrix.os-fancy-name) == 'linux' && (matrix.target-arch) == 'arm'
-
-    - run: sudo apt update -y && sudo apt install g++-aarch64-linux-gnu -y
-      if: (matrix.os-fancy-name) == 'linux' && (matrix.target-arch) == 'aarch64'
+    - name: (linux) install apt packages.
+      if: matrix.os-fancy-name == 'linux' && matrix.apt-packages != null
+      run: sudo apt update -y && sudo apt install ${{ matrix.apt-packages }} -y
 
 
-    - name: configure
-      if: matrix.cross == false
+    - name: configure.
+      if: matrix.cross-file == null
       run: meson --buildtype=release bin
     
-    - name: configure (cross)
-      if: matrix.cross == true
+    - name: (cross) configure.
+      if: matrix.cross-file != null
       run: meson --buildtype=release bin --cross-file ${{ matrix.cross-file }}
     
 
-    - name: compile
+    - name: compile.
       run: meson compile -C bin -j 10
+
 
     - uses: actions/upload-artifact@v2
       if: github.event_name != 'release'
@@ -121,11 +103,11 @@ jobs:
           bin/markdown-help
 
     
-    - name: bundle (Windows)
+    - name: (windows) bundle.
       if: (matrix.os-fancy-name) == 'windows' && (github.event_name == 'release')
       run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip bin\markdown-help.exe
 
-    - name: bundle (Linux / Mac)
+    - name: (linux / mac) bundle.
       if: (matrix.os-fancy-name) != 'windows' && (github.event_name == 'release')
       run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz bin/markdown-help
 
