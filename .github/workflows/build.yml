@@ -16,19 +16,23 @@ jobs:
           - os: windows-latest
             os-fancy-name: 'windows'
             target-arch: 'x86_64'
+            msvc-target-arch: 'x86_64'
 
           - os: windows-latest
             os-fancy-name: 'windows'
             target-arch: 'x86'
+            msvc-target-arch: 'amd64_x86'
 
           - os: windows-latest
             os-fancy-name: 'windows'
             target-arch: 'arm'
+            msvc-target-arch: 'amd64_arm'
             cross-file: 'cross/windows-arm.txt'
 
           - os: windows-latest
             os-fancy-name: 'windows'
             target-arch: 'aarch64'
+            msvc-target-arch: 'amd64_arm64'
             cross-file: 'cross/windows-aarch64.txt'
 
 
@@ -59,8 +63,8 @@ jobs:
 
     - uses: ilammy/msvc-dev-cmd@v1
       if: matrix.os-fancy-name == 'windows'
-     # with:
-      #  arch: ${{ matrix.target-arch }}
+      with:
+        arch: ${{ msvc-target-arch }}
     
     - uses: actions/setup-python@v3
       with:
@@ -73,7 +77,7 @@ jobs:
     - uses: hendrikmuhs/ccache-action@v1
       if: matrix.os-fancy-name != 'windows'
       with:
-        key: ${{ matrix.os }}-${{ matrix.target-arch-fancy-name }}
+        key: ${{ matrix.os }}-${{ matrix.target-arch }}
 
 
     - name: (linux) install apt packages.
@@ -97,7 +101,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       if: github.event_name != 'release'
       with:
-        name: markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}
+        name: markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch }}
         path: |
           bin/markdown-help.exe
           bin/markdown-help
@@ -105,15 +109,15 @@ jobs:
     
     - name: (windows) bundle.
       if: (matrix.os-fancy-name) == 'windows' && (github.event_name == 'release')
-      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip bin\markdown-help.exe
+      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch }}.zip bin\markdown-help.exe
 
     - name: (linux / mac) bundle.
       if: (matrix.os-fancy-name) != 'windows' && (github.event_name == 'release')
-      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz bin/markdown-help
+      run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch }}.tar.gz bin/markdown-help
 
     
     - uses: AButler/upload-release-assets@v2.0
       if: github.event_name == 'release'
       with:
-        files: 'markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.zip;markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch-fancy-name }}.tar.gz'
+        files: 'markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch }}.zip;markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch }}.tar.gz'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
