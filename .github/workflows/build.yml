@@ -128,7 +128,7 @@ jobs:
       run: tar -czf markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch }}.tar.gz bin/markdown-help
 
     
-    - uses: AButler/upload-release-assets@v2.0
+    - uses: AButler/upload-release-assets@v3.0
       if: github.event_name == 'release'
       with:
         files: 'markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch }}.zip;markdown-help-${{ matrix.os-fancy-name }}-${{ matrix.target-arch }}.tar.gz'
